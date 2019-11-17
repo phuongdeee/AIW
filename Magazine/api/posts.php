@@ -17,7 +17,7 @@ if($url == '/posts' && $_SERVER['REQUEST_METHOD'] == 'GET') {
     echo json_encode($posts);
 }
 //return single post
-if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'GET'){
+if(preg_match("/posts\/(^\d{2}$)+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'GET'){
     $postId = $matches[1];
     $post = getPost($dbConn, $postId);
     echo json_encode($post);
@@ -26,12 +26,13 @@ if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD']
 if($url == '/posts' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $input = $_POST;
     $postId = addPost($input, $dbConn);
-    if($postId){
-        $input['id'] = $postId;
-        $input['link'] = "/posts/$postId";
-    }
+    // if($postId){
+    //     $input['id'] = $postId;
+    //     $input['link'] = "/posts/$postId";
+    // }
     echo json_encode($input);
 }
+
 
 /* if update post function is needed */
 if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'PATCH'){
@@ -45,10 +46,10 @@ if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD']
 /* if delete post function is needed*/
 if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'DELETE'){
     $postId = $matches[1];
-    deletePost($dbConn, $postId);
+    $result = deletePost($dbConn, $postId);
     echo json_encode([
         'id'=> $postId,
-        'deleted'=> 'true'
+        'deleted'=> $result
     ]);
 }
 
@@ -90,10 +91,10 @@ function addPost($input, $db){
     $sql = "INSERT INTO posts
     (title, content, author, status, image, created_at, updated_at)
     VALUES
-    (:title, :content, :author, :status, :image, :created_at, :updated_at))";
+    (:title, :content, :author, :status, :image, :created_at, :updated_at)";
     $statement = $db->prepare($sql);
-    // bindAllValues($statement, $input);
-    // $statement->execute();
+    bindAllValues($statement, $input);
+    $statement->execute();
     return $db->lastInsertId();
 }
 /**
@@ -147,7 +148,6 @@ function updatePost($input, $db, $postId){
     var_dump($statement);
     $statement->execute();
     return $postId;
-    // "SELECT * FROM posts where id=:id"
 }
 /**
 * Delete Post record based on ID
@@ -156,7 +156,7 @@ function updatePost($input, $db, $postId){
 * @param $id
 */
 function deletePost($db, $id) {
-    $statement = $db->prepare("DELETE FROM posts where id=':id'");
+    $statement = $db->prepare("DELETE FROM posts where id=:id");
     $statement->bindValue(':id', $id);
     $result = $statement->execute();
     return $result;

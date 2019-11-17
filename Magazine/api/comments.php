@@ -10,10 +10,10 @@ if(strpos($url,"/") !== 0){
 $dbInstance = new DB();
 $dbConn = $dbInstance->connect($db);
 
-header("Content-Type:application/json");
+// header("Content-Type:application/json");
 
-if($url == '/comment' && $_SERVER['REQUEST_METHOD'] == 'GET') {
-    $comments = getAllComments();
+if($url == '/comments' && $_SERVER['REQUEST_METHOD'] == 'GET') {
+    $comments = getAllComments($dbConn);
     echo json_encode($comments);
 }
 //return single cmt
@@ -22,31 +22,27 @@ if(preg_match("/comments\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHO
     $comment = getComment($dbConn, $commentId);
     echo json_encode($comment);
 }
-
+/*in case the function adding comment is needed */
 if($url == '/comments' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $input = $_POST;
     $commentId = addComment($input, $dbConn);
-    if($commentId){
-        $input['id'] = $commentId;
-        $input['link'] = "/comments/$commentId";
-    }
     echo json_encode($input);
 }
-
-if(preg_match("/comments\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'PUT'){
+/* if update comment function is needed */
+if(preg_match("/comments\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'PATCH'){
     $input = $_GET;
     $commentId = $matches[1];
     updateComment($input, $dbConn, $commentId);
     $comment = getComment($dbConn, $commentId);
     echo json_encode($comment);
 }
-
+/* if delete comment function is needed*/
 if(preg_match("/comments\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'DELETE'){
     $commentId = $matches[1];
-    deleteComment($dbConn, $commentId);
+    $result = deleteComment($dbConn, $commentId);
     echo json_encode([
         'id'=> $commentId,
-        'deleted'=> 'true'
+        'deleted'=> $result
     ]);
 }
 /**
@@ -71,8 +67,7 @@ function getComment($db, $id) {
 function getAllComments($db) {
     $statement = $db->prepare("SELECT * FROM comments");
     $statement->execute();
-    $statement->setFetchMode(PDO::FETCH_ASSOC);
-    var_dump($statement);
+    $result = $statement->setFetchMode(PDO::FETCH_ASSOC);
     return $statement->fetchAll();
 }
 /**
@@ -84,9 +79,9 @@ function getAllComments($db) {
  */
 function addComment($input, $db){
     $sql = "INSERT INTO comments
-    (name, content, comment_id)
+    (post_id, user_name, content, created_at, updated_at)
     VALUES
-    (:name, :content, :comment_id)";
+    (:post_id, :user_name, :content, :created_at, :updated_at)";
     $statement = $db->prepare($sql);
     bindAllValues($statement, $input);
     $statement->execute();
@@ -98,7 +93,7 @@ function addComment($input, $db){
  * @return PDOStatement
  */
 function bindAllValues($statement, $params){
-    $allowedFields = ['name', 'content', 'comment_id'];
+    $allowedFields = ['post_id', 'user_name', 'content', 'created_at', 'updated_at'];
     foreach($params as $param => $value){
         if(in_array($param, $allowedFields)){
             $statement->bindValue(':'.$param, $value);
@@ -113,7 +108,7 @@ function bindAllValues($statement, $params){
  * @return string
  */
 function getParams($input) {
-    $allowedFields = ['name', 'content', 'comment_id'];
+    $allowedFields = ['post_id', 'user_name', 'content', 'created_at', 'updated_at'];
     $filterParams = [];
     foreach($input as $param => $value){
         if(in_array($param, $allowedFields)){
@@ -136,9 +131,11 @@ function updateComment($input, $db, $commentId){
     $sql = "
     UPDATE comments
     SET $fields
-    WHERE id=':commentId'";
+    WHERE id=:commentId";
     $statement = $db->prepare($sql);
+    $statement->bindValue(':commentId', $commentId);
     bindAllValues($statement, $input);
+    var_dump($statement);
     $statement->execute();
     return $commentId;
 }
