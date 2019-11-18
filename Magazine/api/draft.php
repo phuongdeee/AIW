@@ -9,16 +9,15 @@ if (strpos($url, "/") !== 0) {
 $dbInstance = new DB();
 $dbConn = $dbInstance->connect($db);
 
-header("Content-Type:application/json");
+// header("Content-Type:application/json");
 
 
 if($url == '/posts' && $_SERVER['REQUEST_METHOD'] == 'GET') {
     $posts = getAllPosts($dbConn);
-
     echo json_encode($posts);
 }
 //return single post
-if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'GET'){
+if(preg_match("/posts\/([0-9]{1,2}[:.,-]?$)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'GET'){
     $postId = $matches[1];
     $post = getPost($dbConn, $postId);
     echo json_encode($post);
@@ -32,7 +31,7 @@ if($url == '/posts' && $_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
 /* if update post function is needed */
-if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'PATCH'){
+if(preg_match("/posts\/([0-9]{1,2}[:.,-]?$)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'PATCH'){
     $input = $_GET;
     $postId = $matches[1];
     updatePost($input, $dbConn, $postId);
@@ -41,7 +40,7 @@ if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD']
 }
 
 /* if delete post function is needed*/
-if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'DELETE'){
+if(preg_match("/posts\/([0-9]{1,2}[:.,-]?$)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'DELETE'){
     $postId = $matches[1];
     $result = deletePost($dbConn, $postId);
     echo json_encode([
@@ -63,7 +62,7 @@ function getPost($db, $id) {
     $statement->execute();
     return $statement->fetch(PDO::FETCH_ASSOC);
 }
-// em bao post id bang 1 e xoa roi khong get duoc
+
 /**
 * Get all posts
 *
@@ -86,9 +85,9 @@ function getAllPosts($db) {
  */
 function addPost($input, $db){
     $sql = "INSERT INTO posts
-    (category, title, content, author, status, image, created_at, updated_at)
+    (title, content, author, status, image, created_at, updated_at)
     VALUES
-    (:category, :title, :content, :author, :status, :image, :created_at, :updated_at)";
+    (:title, :content, :author, :status, :image, :created_at, :updated_at)";
     $statement = $db->prepare($sql);
     bindAllValues($statement, $input);
     $statement->execute();
@@ -100,7 +99,7 @@ function addPost($input, $db){
  * @return PDOStatement
  */
 function bindAllValues($statement, $params){
-    $allowedFields = ['category', 'title', 'content', 'author', 'status', 'image', 'created_at', 'updated_at'];
+    $allowedFields = ['title', 'content', 'author', 'status', 'image', 'created_at', 'updated_at'];
     foreach($params as $param => $value){
         if(in_array($param, $allowedFields)){
             $statement->bindValue(':'.$param, $value);
@@ -115,7 +114,7 @@ function bindAllValues($statement, $params){
  * @return string
  */
 function getParams($input) {
-    $allowedFields = ['category', 'title', 'content', 'author', 'status', 'image', 'created_at', 'updated_at'];
+    $allowedFields = ['title', 'content', 'author', 'status', 'image', 'created_at', 'updated_at'];
     $filterParams = [];
     foreach($input as $param => $value){
         if(in_array($param, $allowedFields)){
@@ -138,7 +137,7 @@ function updatePost($input, $db, $postId){
     $sql = "
     UPDATE posts
     SET $fields
-    WHERE id= :postId";
+    WHERE id=':postId'";
     $statement = $db->prepare($sql);
     $statement->bindValue(':postId', $postId);
     bindAllValues($statement, $input);
