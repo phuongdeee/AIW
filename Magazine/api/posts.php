@@ -17,7 +17,7 @@ if($url == '/posts' && $_SERVER['REQUEST_METHOD'] == 'GET') {
     echo json_encode($posts);
 }
 //return single post
-if(preg_match("/posts\/(^\d{2}$)+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'GET'){
+if(preg_match("/posts\/([0-9]{1,2}[:.,-]?$)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'GET'){
     $postId = $matches[1];
     $post = getPost($dbConn, $postId);
     echo json_encode($post);
@@ -26,16 +26,12 @@ if(preg_match("/posts\/(^\d{2}$)+/", $url, $matches) && $_SERVER['REQUEST_METHOD
 if($url == '/posts' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $input = $_POST;
     $postId = addPost($input, $dbConn);
-    // if($postId){
-    //     $input['id'] = $postId;
-    //     $input['link'] = "/posts/$postId";
-    // }
     echo json_encode($input);
 }
 
 
 /* if update post function is needed */
-if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'PATCH'){
+if(preg_match("/posts\/([0-9]{1,2}[:.,-]?$)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'PATCH'){
     $input = $_GET;
     $postId = $matches[1];
     updatePost($input, $dbConn, $postId);
@@ -44,7 +40,7 @@ if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD']
 }
 
 /* if delete post function is needed*/
-if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'DELETE'){
+if(preg_match("/posts\/([0-9]{1,2}[:.,-]?$)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'DELETE'){
     $postId = $matches[1];
     $result = deletePost($dbConn, $postId);
     echo json_encode([
@@ -141,7 +137,7 @@ function updatePost($input, $db, $postId){
     $sql = "
     UPDATE posts
     SET $fields
-    WHERE id=:postId";
+    WHERE id=':postId'";
     $statement = $db->prepare($sql);
     $statement->bindValue(':postId', $postId);
     bindAllValues($statement, $input);
