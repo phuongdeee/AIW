@@ -1,0 +1,7 @@
+Configuration:
+
+1. Firsly, Open Xampp and then, Click to Start Apache and MySQL
+2. Create database named "localnews" on phpMyAdmin
+3. Using Postman to test server
+4. Open Visual Studio Code
+5. Run Web Client
