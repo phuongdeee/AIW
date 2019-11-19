@@ -22,6 +22,12 @@ if(preg_match("/categories\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_MET
     $post = getCategory($dbConn, $categoryId);
     echo json_encode($post);
 }
+// /*in case the function adding category is needed */
+// if($url == '/categories' && $_SERVER['REQUEST_METHOD'] == 'POST') {
+//     $input = $_POST;
+//     $categorytId = addCategory($input, $dbConn);
+//     echo json_encode($input);
+// }
 
 
 /**
@@ -51,3 +57,36 @@ function getAllCategories($db) {
     // var_dump($statement);
     return $statement->fetchAll();
 }
+
+// /**
+//  * Add category
+//  *
+//  * @param $input
+//  * @param $db
+//  * @return integer
+//  */
+// function addCategory($input, $db){
+//     $sql = "INSERT INTO categories
+//     (category_name
+//     VALUES
+//     (:category_name)";
+//     $statement = $db->prepare($sql);
+//     bindAllValues($statement, $input);
+//     $statement->execute();
+//     return $db->lastInsertId();
+// }
+
+// /**
+//  * @param $statement
+//  * @param $params
+//  * @return PDOStatement
+//  */
+// function bindAllValues($statement, $params){
+//     $allowedFields = [ 'category_name'];
+//     foreach($params as $param => $value){
+//         if(in_array($param, $allowedFields)){
+//             $statement->bindValue(':'.$param, $value);
+//         }
+//     }
+//     return $statement;
+// }

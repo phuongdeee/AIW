@@ -146,8 +146,9 @@ function updateComment($input, $db, $commentId){
 * @param $id
 */
 function deleteComment($db, $id) {
-    $statement = $db->prepare("DELETE FROM comments where id=':id'");
+    $statement = $db->prepare("DELETE FROM comments where id=:id");
     $statement->bindValue(':id', $id);
-    $statement->execute();
+    $result = $statement->execute();
+    return $result;
 }
 ?>
