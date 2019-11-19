@@ -42,6 +42,7 @@
 							<li><a href="lifestyle.php">Lifestyle</a></li>
 							<li><a href="health.php">Health</a></li>
 							<li ><a href="travel.php">Travel</a>
+							<li ><a href="family.php">Family</a>
 							<!-- <ul>
 								<li><a href="standard-post.php">Standard Post</a></li>
 								<li><a href="image-post.php">Image Post</a></li>

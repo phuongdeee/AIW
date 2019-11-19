@@ -74,7 +74,6 @@ function getAllPosts($db) {
     $statement = $db->prepare("SELECT * FROM posts");
     $statement->execute();
     $statement->setFetchMode(PDO::FETCH_ASSOC);
-    // var_dump($statement);
     return $statement->fetchAll();
 }
 /**
