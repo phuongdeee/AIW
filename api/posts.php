@@ -18,7 +18,7 @@ if($url == '/posts' && $_SERVER['REQUEST_METHOD'] == 'GET') {
     echo json_encode($posts);
 }
 //return single post
-if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'GET'){
+if(preg_match("/posts\/([0-9]{1,2}[:.,-]?$)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'GET'){
     $postId = $matches[1];
     $post = getPost($dbConn, $postId);
     echo json_encode($post);
@@ -41,7 +41,7 @@ if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD']
 }
 
 /* if delete post function is needed*/
-if(preg_match("/posts\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'DELETE'){
+if(preg_match("/posts\/([0-9]{1,2}[:.,-]?$)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'DELETE'){
     $postId = $matches[1];
     $result = deletePost($dbConn, $postId);
     echo json_encode([
@@ -63,7 +63,7 @@ function getPost($db, $id) {
     $statement->execute();
     return $statement->fetch(PDO::FETCH_ASSOC);
 }
-// em bao post id bang 1 e xoa roi khong get duoc
+
 /**
 * Get all posts
 *
