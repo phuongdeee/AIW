@@ -187,10 +187,10 @@
 							</div>
 							<div class="comment-form">
 								<h4>Post Comment</h4>
-								<form>
-									<div class="form-group form-inline" method="POST">
+								<form action="post.php" method="GET">
+									<div class="form-group form-inline">
 										<div class="form-group col-lg-6 col-md-12 name">
-											<input type="text" class="form-control" id="name" placeholder="Enter Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Name'" required>
+											<input type="text" class="form-control" name="name" id="name" placeholder="Enter Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Name'" required>
 										</div>
 										<!-- <div class="form-group col-lg-6 col-md-12 email">
 											<input type="email" class="form-control" id="email" placeholder="Enter email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'">
@@ -200,7 +200,7 @@
 										<input type="text" class="form-control" id="subject" placeholder="Subject" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Subject'">
 									</div> -->
 									<div class="form-group">
-										<textarea class="form-control mb-10" rows="5" name="message" placeholder="Messege" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Messege'" required=""></textarea>
+										<textarea class="form-control mb-10" rows="5" name="message" id="message" placeholder="Messege" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Messege'" required=""></textarea>
 									</div>
 									<input type="submit" class="primary-btn text-uppercase name="add_cmt" value="post comment" > 
 									<!-- <a href="#" class="primary-btn text-uppercase">Post Comment</a> -->
@@ -235,7 +235,16 @@
 	<script src="../js/mail-script.js"></script>
 	<script src="../js/main.js"></script>
 </body>
-</html>
 <?php
-
+if($_GET['name'] !== NULL && $_GET['message'] !== NULL){
+	$name = $_GET['name'];
+	$avata = "../img/blog/c2.jpg";
+	$mess = $_GET['message'];
+	$created_at = "2019-11-11";
+	$updated_at = "2019-11-11";
+	$data = array(6,$name,$avata,$mess,$created_at,$updated_at);
+	var_dump($data);
+	$index = CallAPI('POST','http://localhost:8000/comments',$data);
+}
 ?>
+</html>
