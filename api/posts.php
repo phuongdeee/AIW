@@ -9,7 +9,7 @@ if (strpos($url, "/") !== 0) {
 $dbInstance = new DB();
 $dbConn = $dbInstance->connect($db);
 
-// header("Content-Type:application/json");
+header("Content-Type:application/json");
 
 
 if($url == '/posts' && $_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -77,7 +77,6 @@ function getAllPosts($db) {
     $statement = $db->prepare("SELECT * FROM posts");
     $statement->execute();
     $statement->setFetchMode(PDO::FETCH_ASSOC);
-    // var_dump($statement);
     return $statement->fetchAll();
 }
 /**

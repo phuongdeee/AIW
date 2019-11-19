@@ -1,3 +1,4 @@
+<?php include('../api/comments.php'); ?>
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
 	<head>
@@ -31,7 +32,18 @@
 	</head>
 	<body>
 		<?php include('header.php'); ?>
+		<?php
+		try 
+			{
+				$cmts_list = file_get_contents("http://localhost:8000/comments");
+				$cmts = json_decode($cmts_list);
+			} 
+		catch (Exception $e) 
+			{
+				die('ERROR: ' . $e->getMessage());
+			}
 		
+	?>
 		<div class="site-main-container">
 			<!-- Start top-post Area -->
 			<section class="top-post-area pt-10">
@@ -92,27 +104,45 @@
 								<div class="comment-sec-area">
 									<div class="container">
 										<div class="row flex-column">
-											<h6>05 Comments</h6>
-											<div class="comment-list">
-												<div class="single-comment justify-content-between d-flex">
-													<div class="user justify-content-between d-flex">
-														<div class="thumb">
-															<img src="../img/blog/c1.jpg" alt="">
+										<?php $count = count($cmts)?>
+											<h6><?php echo $count;?> Comments</h6>
+											<!-- Single cmt starts -->
+											<?php 
+											if($count > 0){
+												for($i = 0; $i < $count ; $i++){ ?>
+												<div class="comment-list">
+													<div class="single-comment justify-content-between d-flex">
+														<div class="user justify-content-between d-flex">
+															<div class="thumb">
+																<img src="<?php echo $cmts[$i]->avatar; ?>" alt="">
+															</div>
+															<div class="desc">
+																<h5><a href="#"><?php echo $cmts[$i]->user_name; ?></a></h5>
+																<p class="date"><?php echo $cmts[$i]->created_at; ?> </p>
+																<p class="comment">
+																<?php echo $cmts[$i]->content; ?>
+																</p>
+															</div>
 														</div>
-														<div class="desc">
-															<h5><a href="#">Emilly Blunt</a></h5>
-															<p class="date">December 4, 2017 at 3:12 pm </p>
-															<p class="comment">
-																Never say goodbye till the end comes!
-															</p>
+														<div class="reply-btn">
+															<a href="" class="btn btn-outline-info">
+															<img src="../open-iconic-master/svg/pencil.svg">
+															</a>
+															<a href="" class="btn btn-outline-danger">
+															<img src="../open-iconic-master/svg/trash.svg">
+															</a>
 														</div>
-													</div>
-													<div class="reply-btn">
-														<a href="" class="btn-reply text-uppercase">reply</a>
 													</div>
 												</div>
-											</div>
-											<div class="comment-list left-padding">
+											<?php 
+												}
+											}else{
+												echo "No comment";
+											}
+											?>
+											<!-- Single cmt ends -->
+											<!-- reply of a cmt starts -->
+											<!-- <div class="comment-list left-padding">
 												<div class="single-comment justify-content-between d-flex">
 													<div class="user justify-content-between d-flex">
 														<div class="thumb">
@@ -130,8 +160,9 @@
 														<a href="" class="btn-reply text-uppercase">reply</a>
 													</div>
 												</div>
-											</div>
-											<div class="comment-list">
+											</div> -->
+											<!-- reply of a cmt ends -->
+											<!-- <div class="comment-list">
 												<div class="single-comment justify-content-between d-flex">
 													<div class="user justify-content-between d-flex">
 														<div class="thumb">
@@ -149,7 +180,7 @@
 														<a href="" class="btn-reply text-uppercase">reply</a>
 													</div>
 												</div>
-											</div>
+											</div> -->
 										</div>
 									</div>
 								</div>
@@ -157,9 +188,9 @@
 							<div class="comment-form">
 								<h4>Post Comment</h4>
 								<form>
-									<div class="form-group form-inline">
+									<div class="form-group form-inline" method="POST">
 										<div class="form-group col-lg-6 col-md-12 name">
-											<input type="text" class="form-control" id="name" placeholder="Enter Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Name'">
+											<input type="text" class="form-control" id="name" placeholder="Enter Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Name'" required>
 										</div>
 										<!-- <div class="form-group col-lg-6 col-md-12 email">
 											<input type="email" class="form-control" id="email" placeholder="Enter email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'">
@@ -171,81 +202,14 @@
 									<div class="form-group">
 										<textarea class="form-control mb-10" rows="5" name="message" placeholder="Messege" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Messege'" required=""></textarea>
 									</div>
-									<a href="#" class="primary-btn text-uppercase">Post Comment</a>
+									<input type="submit" class="primary-btn text-uppercase name="add_cmt" value="post comment" > 
+									<!-- <a href="#" class="primary-btn text-uppercase">Post Comment</a> -->
 								</form>
 							</div>
 						</div>
 						<!-- End single-post Area -->
 					</div>
-					<div class="col-lg-4">
-						<div class="sidebars-area">
-							<div class="single-sidebar-widget editors-pick-widget">
-								<h6 class="title">Related News</h6>
-								<div class="editors-pick-post">
-									<div class="feature-img-wrap relative">
-										<div class="feature-img relative">
-											<div class="overlay overlay-bg"></div>
-										</div>
-									</div>
-									<div class="details">
-										<a href="image-post.html">
-											<h4 class="mt-20">A Discount Toner Cartridge Is
-											Better Than Ever.</h4>
-										</a>
-										<ul class="meta">
-											<li><a href="#"><span class="lnr lnr-user"></span>Mark wiens</a></li>
-											<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-											<li><a href="#"><span class="lnr lnr-bubble"></span>06 </a></li>
-										</ul>
-										<p class="excert">
-											Lorem ipsum dolor sit amet, consecteturadip isicing elit, sed do eiusmod tempor incididunt ed do eius.
-										</p>
-									</div>
-									<div class="post-lists">
-										<div class="single-post d-flex flex-row">
-											<div class="thumb">
-												<img src="../img/e2.jpg" alt="">
-											</div>
-											<div class="detail">
-												<a href="image-post.php"><h6>Help Finding Information
-												Online is so easy</h6></a>
-												<ul class="meta">
-													<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-													<li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li>
-												</ul>
-											</div>
-										</div>
-										<div class="single-post d-flex flex-row">
-											<div class="thumb">
-												<img src="../img/e3.jpg" alt="">
-											</div>
-											<div class="detail">
-												<a href="image-post.php"><h6>Compatible Inkjet Cartr
-												world famous</h6></a>
-												<ul class="meta">
-													<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-													<li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li>
-												</ul>
-											</div>
-										</div>
-										<div class="single-post d-flex flex-row">
-											<div class="thumb">
-												<img src="../img/e4.jpg" alt="">
-											</div>
-											<div class="detail">
-												<a href="image-post.php"><h6>5 Tips For Offshore Soft
-												Development </h6></a>
-												<ul class="meta">
-													<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-													<li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+					<?php include('right_sidebar.php');?>
 				</div>
 			</div>
 		</section>
@@ -272,3 +236,6 @@
 	<script src="../js/main.js"></script>
 </body>
 </html>
+<?php
+
+?>

@@ -1,5 +1,5 @@
+<?php echo "Hello world"; ?>
 <?php 
-include('header.php');
 include('../api/posts.php');
 ?>
 <!DOCTYPE html>
@@ -36,6 +36,7 @@ include('../api/posts.php');
 	<body>
 	
 	<?php
+	include('header.php');
 		try 
 			{
 				$posts_list = file_get_contents("http://localhost:8000/posts");
@@ -64,33 +65,28 @@ include('../api/posts.php');
 									<div class="col-lg-5 post-left">
 										<div class="feature-img relative">
 											<div class="overlay overlay-bg"></div>
-											<img class="img-fluid" src="<?php echo $posts[$i]->image ?>" alt="">
+											<img class="img-fluid" src="<?php echo $posts[$i]->image; ?>" alt="">
 										</div>
 										<ul class="tags">
 											<li><a href="#">
-											<?php 
-											if($posts[$i]->cate_id == 1){echo "Lifestyle";} 
-											else if($posts[$i]->cate_id == 2){echo "Health";}
-											else if($posts[$i]->cate_id == 3){echo "Travel";}
-											else if($posts[$i]->cate_id == 4){echo "Family";}
-											 ?>
+											<?php  echo $posts[$i]->category; ?>
 											</a></li>
 										</ul>
 									</div>
 									<div class="col-lg-7 post-right">
 										<a href="post.php">
-											<h4><?php echo $posts[$i]->title ?></h4>
+											<h4><?php echo $posts[$i]->title; ?></h4>
 										</a>
 										<ul class="meta">
 											<li><a href="#"><span class="lnr lnr-user">
-											</span><?php echo $posts[$i]->author ?></a></li>
+											</span><?php echo $posts[$i]->author; ?></a></li>
 											<li><a href="#"><span class="lnr lnr-calendar-full">
-											</span><?php echo $posts[$i]->created_at ?></a></li>
+											</span><?php echo $posts[$i]->created_at; ?></a></li>
 											<!-- <li><a href="#"><span class="lnr lnr-bubble">
 											</span>06 Comments</a></li> -->
 										</ul>
 										<p class="excert">
-										<?php echo $posts[$i]->content ?>
+										<?php echo $posts[$i]->content; ?>
 										</p>
 									</div>
 								</div>
