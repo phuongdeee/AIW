@@ -1,7 +1,4 @@
-<?php echo "Hello world"; ?>
-<?php 
-include('../api/posts.php');
-?>
+
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
 	<head>

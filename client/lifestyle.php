@@ -1,4 +1,3 @@
-<?php include('../api/posts.php'); ?>
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
 	<head>
@@ -58,7 +57,7 @@
 							<!-- Single post starts -->
 							<?php $count = count($posts); 
 									for($i = 0; $i < $count ; $i++){
-										if($posts[$i]->cate_id == 1){
+										if($posts[$i]->category == "lifestyle"){
 								?>
 								<div class="single-latest-post row align-items-center">
 									<div class="col-lg-5 post-left">
