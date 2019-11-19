@@ -138,7 +138,7 @@ function updatePost($input, $db, $postId){
     $sql = "
     UPDATE posts
     SET $fields
-    WHERE id= :postId";
+    WHERE id=:postId";
     $statement = $db->prepare($sql);
     $statement->bindValue(':postId', $postId);
     bindAllValues($statement, $input);
