@@ -1,7 +1,15 @@
 Configuration:
 
 1. Firsly, Open Xampp and then, Click to Start Apache and MySQL
+
 2. Create database named "localnews" on phpMyAdmin
-3. Using Postman to test server
-4. Open Visual Studio Code
+
+3. Open Visual Studio Code
+- Create these directories:
+3.1. Ctrl ~ to open Terminal
+3.2. Using command: "cd api" to change present directory to api directory
+3.3. Using next command: "php -S localhost:8000"
+
+4. Using Postman to test server
+
 5. Run Web Client

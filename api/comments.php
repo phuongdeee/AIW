@@ -17,27 +17,27 @@ if($url == '/comments' && $_SERVER['REQUEST_METHOD'] == 'GET') {
     echo json_encode($comments);
 }
 //return single cmt
-if(preg_match("/comments\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'GET'){
+if(preg_match("/comments\/([0-9]{1,2}[:.,-]?)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'GET'){
     $commentId = $matches[1];
     $comment = getComment($dbConn, $commentId);
     echo json_encode($comment);
 }
-/*in case the function adding comment is needed */
+/* function adding comment */
 if($url == '/comments' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $input = $_POST;
     $commentId = addComment($input, $dbConn);
     echo json_encode($input);
 }
-/* if update comment function is needed */
-if(preg_match("/comments\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'PATCH'){
+/* edit & update comment function */
+if(preg_match("/comments\/([0-9]{1,2}[:.,-]?)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'PATCH'){
     $input = $_GET;
     $commentId = $matches[1];
     updateComment($input, $dbConn, $commentId);
     $comment = getComment($dbConn, $commentId);
     echo json_encode($comment);
 }
-/* if delete comment function is needed*/
-if(preg_match("/comments\/([0-9])+/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'DELETE'){
+/* delete comment function*/
+if(preg_match("/comments\/([0-9]{1,2}[:.,-]?)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'DELETE'){
     $commentId = $matches[1];
     $result = deleteComment($dbConn, $commentId);
     echo json_encode([
