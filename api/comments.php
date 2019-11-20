@@ -79,9 +79,9 @@ function getAllComments($db) {
  */
 function addComment($input, $db){
     $sql = "INSERT INTO comments
-    (post_id, user_name, avata, content, created_at, updated_at)
+    (post_id, user_name, content)
     VALUES
-    (:post_id, :user_name, :avata, :content, :created_at, :updated_at)";
+    (:post_id, :user_name, :content)";
     $statement = $db->prepare($sql);
     bindAllValues($statement, $input);
     $statement->execute();
@@ -93,7 +93,7 @@ function addComment($input, $db){
  * @return PDOStatement
  */
 function bindAllValues($statement, $params){
-    $allowedFields = ['post_id', 'user_name', 'avata', 'content', 'created_at', 'updated_at'];
+    $allowedFields = ['post_id', 'user_name', 'content'];
     foreach($params as $param => $value){
         if(in_array($param, $allowedFields)){
             $statement->bindValue(':'.$param, $value);
@@ -108,7 +108,7 @@ function bindAllValues($statement, $params){
  * @return string
  */
 function getParams($input) {
-    $allowedFields = ['post_id', 'user_name', 'avata', 'content', 'created_at', 'updated_at'];
+    $allowedFields = ['post_id', 'user_name', 'content'];
     $filterParams = [];
     foreach($input as $param => $value){
         if(in_array($param, $allowedFields)){
@@ -135,7 +135,7 @@ function updateComment($input, $db, $commentId){
     $statement = $db->prepare($sql);
     $statement->bindValue(':commentId', $commentId);
     bindAllValues($statement, $input);
-    var_dump($statement);
+    // var_dump($statement);
     $statement->execute();
     return $commentId;
 }

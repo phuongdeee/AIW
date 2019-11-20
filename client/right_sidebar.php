@@ -1,73 +1,33 @@
-
+<?php
+$posts_list = file_get_contents("http://localhost:8000/posts");
+$posts = json_decode($posts_list);
+?>
 <div class="col-lg-4">
 							<div class="sidebars-area">
 								<div class="single-sidebar-widget editors-pick-widget">
                                 <div class="single-sidebar-widget most-popular-widget">
 									<h6 class="title">Most Popular</h6>
+									<?php for($i = 0; $i < 3; $i++){?>
 									<div class="single-list flex-row d-flex">
 										<div class="thumb">
-											<img src="../img/m1.jpg" alt="">
+											<img src="../img/e2.jpg" alt="">
 										</div>
 										<div class="details">
-											<a href="post.php">
-												<h6>Help Finding Information
-												Online is so easy</h6>
+											<a href="post.php?id=<?= $posts[$i]->id ?>">
+												<h6><?= $posts[$i]->title?></h6>
 											</a>
 											<ul class="meta">
-												<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-												<li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li>
+												<li><a href="#"><span class="lnr lnr-calendar-full"></span>
+												<?= $posts[$i]->created_at?></a></li>
+												<!-- <li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li> -->
 											</ul>
 										</div>
 									</div>
-									<div class="single-list flex-row d-flex">
-										<div class="thumb">
-											<img src="../img/m2.jpg" alt="">
-										</div>
-										<div class="details">
-											<a href="post.php">
-												<h6>Compatible Inkjet Cartr
-												world famous</h6>
-											</a>
-											<ul class="meta">
-												<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-												<li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li>
-											</ul>
-										</div>
-									</div>
-									<div class="single-list flex-row d-flex">
-										<div class="thumb">
-											<img src="../img/m3.jpg" alt="">
-										</div>
-										<div class="details">
-											<a href="post.php">
-												<h6>5 Tips For Offshore Soft
-												Development </h6>
-											</a>
-											<ul class="meta">
-												<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-												<li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li>
-											</ul>
-										</div>
-									</div>
-									<div class="single-list flex-row d-flex">
-										<div class="thumb">
-											<img src="../img/m4.jpg" alt="">
-										</div>
-										<div class="details">
-											<a href="post.php">
-												<h6>5 Tips For Offshore Soft
-												Development </h6>
-											</a>
-											<ul class="meta">
-												<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-												<li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li>
-											</ul>
-										</div>
-									</div>
+									<?php } ?>
 								</div>
 									<h6 class="title">Related News</h6>
 									<div class="editors-pick-post">
-										<div class="feature-img-wrap relative">
+										<!-- <div class="feature-img-wrap relative">
 											<div class="feature-img relative">
 												<div class="overlay overlay-bg"></div>
 												<img class="img-fluid" src="../img/e1.jpg" alt="">
@@ -89,47 +49,25 @@
 											<p class="excert">
 												Lorem ipsum dolor sit amet, consecteturadip isicing elit, sed do eiusmod tempor incididunt ed do eius.
 											</p>
-										</div>
+										</div> -->
 										<div class="post-lists">
-											<div class="single-post d-flex flex-row">
-												<div class="thumb">
-													<img src="../img/e2.jpg" alt="">
-												</div>
-												<div class="detail">
-													<a href="post.php"><h6>Help Finding Information
-													Online is so easy</h6></a>
-													<ul class="meta">
-														<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-														<li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li>
-													</ul>
-												</div>
-											</div>
-											<div class="single-post d-flex flex-row">
-												<div class="thumb">
-													<img src="../img/e3.jpg" alt="">
-												</div>
-												<div class="detail">
-													<a href="post.php"><h6>Compatible Inkjet Cartr
-													world famous</h6></a>
-													<ul class="meta">
-														<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-														<li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li>
-													</ul>
-												</div>
-											</div>
-											<div class="single-post d-flex flex-row">
-												<div class="thumb">
-													<img src="../img/e4.jpg" alt="">
-												</div>
-												<div class="detail">
-													<a href="post.php"><h6>5 Tips For Offshore Soft
-													Development </h6></a>
-													<ul class="meta">
-														<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-														<li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li>
-													</ul>
-												</div>
-											</div>
+										<?php for($i = 0; $i < 4; $i++){?>
+									<div class="single-list flex-row d-flex">
+										<div class="thumb">
+											<img src="../img/e4.jpg" alt="">
+										</div>
+										<div class="details">
+											<a href="post.php?id=<?= $posts[$i]->id ?>">
+												<h6><?= $posts[$i]->title?></h6>
+											</a>
+											<ul class="meta">
+												<li><a href="#"><span class="lnr lnr-calendar-full"></span>
+												<?= $posts[$i]->created_at?></a></li>
+												<!-- <li><a href="#"><span class="lnr lnr-bubble"></span>06</a></li> -->
+											</ul>
+										</div>
+									</div>
+									<?php } ?>
 										</div>
 									</div>
 								</div>

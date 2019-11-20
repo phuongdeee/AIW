@@ -86,9 +86,9 @@ function getAllPosts($db) {
  */
 function addPost($input, $db){
     $sql = "INSERT INTO posts
-    (category, title, content, author, status, image, created_at, updated_at)
+    (category, title, content, author, status, image)
     VALUES
-    (:category, :title, :content, :author, :status, :image, :created_at, :updated_at)";
+    (:category, :title, :content, :author, :status, :image)";
     $statement = $db->prepare($sql);
     bindAllValues($statement, $input);
     $statement->execute();
@@ -100,7 +100,7 @@ function addPost($input, $db){
  * @return PDOStatement
  */
 function bindAllValues($statement, $params){
-    $allowedFields = ['category', 'title', 'content', 'author', 'status', 'image', 'created_at', 'updated_at'];
+    $allowedFields = ['category', 'title', 'content', 'author', 'status', 'image'];
     foreach($params as $param => $value){
         if(in_array($param, $allowedFields)){
             $statement->bindValue(':'.$param, $value);
@@ -115,7 +115,7 @@ function bindAllValues($statement, $params){
  * @return string
  */
 function getParams($input) {
-    $allowedFields = ['category', 'title', 'content', 'author', 'status', 'image', 'created_at', 'updated_at'];
+    $allowedFields = ['category', 'title', 'content', 'author', 'status', 'image'];
     $filterParams = [];
     foreach($input as $param => $value){
         if(in_array($param, $allowedFields)){

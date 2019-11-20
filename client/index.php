@@ -71,7 +71,7 @@
 										</ul>
 									</div>
 									<div class="col-lg-7 post-right">
-										<a href="post.php">
+										<a href="post.php?id=<?= $posts[$i]->id ?>">
 											<h4><?php echo $posts[$i]->title; ?></h4>
 										</a>
 										<ul class="meta">

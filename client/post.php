@@ -1,4 +1,59 @@
-<?php include('../api/comments.php'); ?>
+
+<?php 
+include('../api/comments.php'); 
+include('api_function.php');
+?>
+
+<?php
+$cmts = file_get_contents("http://localhost:8000/comments");
+$cmts = json_decode($cmts);
+
+$posts = file_get_contents("http://localhost:8000/posts");
+$posts = json_decode($posts);
+if(isset($_GET['id'])) {
+	$id = $_GET['id'];
+	for( $i = 0; $i < count($posts); $i++){
+		if( $posts[$i]->id == $id){
+			$id = $posts[$i]->id;
+			$title = $posts[$i]->title;
+			$author = $posts[$i]->author;
+			$date = $posts[$i]->created_at;
+			$category = $posts[$i]->category;
+			$content = $posts[$i]->content;
+		}
+		
+	}
+	$count = 0;
+	for($i = 0; $i < count($cmts); $i++){
+		if($cmts[$i]->post_id == $id){
+			
+			$count++;
+			$username = $cmts[$i]->user_name;
+			$mess = $cmts[$i]->content;
+			$date = $cmts[$i]->created_at;
+			$cmt_content = $cmts[$i]->content;
+			$cmt_id = $cmts[$i]->id;
+		}
+	}
+	
+}
+if(isset($_POST['add_cmt'])){
+	if(isset($_POST['post_id'], $_POST['user_name'], $_POST['content'])){
+		$data = $_POST;
+		CallAPI('POST','http://localhost:8000/comments',$data);
+		header('Location: ' . $_SERVER['REQUEST_URI']);
+		
+	}
+}
+// if(isset($_POST['post_id'],$_POST['user_name'],$_POST['content'] )){
+// 	$post_id = $_POST['post_id'];
+// 	$input = $_POST;
+
+// 	CallAPI('POST','http://localhost:8000/comments'.$post_id,$input);
+// 	header('Location: '.$_SERVER['REQUEST_URI']);
+// }
+
+?>
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
 	<head>
@@ -78,23 +133,20 @@
 								</div>
 								<div class="content-wrap">
 									<ul class="tags mt-10">
-										<li><a href="#">Food Habit</a></li>
+										<li><a href="#"><?php echo $category; ?></a></li>
 									</ul>
 									<a href="#">
-										<h3>A Discount Toner Cartridge Is Better Than Ever.</h3>
+										<h3><?php echo $title; ?></h3>
 									</a>
 									<ul class="meta pb-20">
-										<li><a href="#"><span class="lnr lnr-user"></span>Mark wiens</a></li>
-										<li><a href="#"><span class="lnr lnr-calendar-full"></span>03 April, 2018</a></li>
-										<li><a href="#"><span class="lnr lnr-bubble"></span>06 </a></li>
+										<li><a href="#"><span class="lnr lnr-user"></span><?php echo $author; ?></a></li>
+										<li><a href="#"><span class="lnr lnr-calendar-full"></span>
+										<?php echo $date; ?></a></li>
+										<li><a href="#"><span class="lnr lnr-bubble"> </span><?php echo $count; ?> </a></li>
 									</ul>
 									<p>
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+									<?php echo $content; ?>
 									</p>
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus.
-									</p>
-								<blockquote>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</blockquote>
 								
 								<div class="navigation-wrap justify-content-between d-flex">
 									<a class="prev" href="#"><span class="lnr lnr-arrow-left"></span>Prev Post</a>
@@ -104,38 +156,36 @@
 								<div class="comment-sec-area">
 									<div class="container">
 										<div class="row flex-column">
-										<?php $count = count($cmts)?>
-											<h6><?php echo $count;?> Comments</h6>
+											<h6><?= $count;?> Comments</h6>
+											<?php if($count > 0){ ?>
 											<!-- Single cmt starts -->
-											<?php 
-											if($count > 0){
-												for($i = 0; $i < $count ; $i++){ ?>
+												<?php for($i = 0; $i < $count ; $i++){ ?>
 												<div class="comment-list">
 													<div class="single-comment justify-content-between d-flex">
 														<div class="user justify-content-between d-flex">
-															<div class="thumb">
-																<img src="<?php echo $cmts[$i]->avatar; ?>" alt="">
-															</div>
+															<!-- <div class="thumb">
+																<img src="" alt="">
+															</div> -->
 															<div class="desc">
-																<h5><a href="#"><?php echo $cmts[$i]->user_name; ?></a></h5>
-																<p class="date"><?php echo $cmts[$i]->created_at; ?> </p>
+																<h5><a href="#"><?= $cmts[$i]->user_name ?></a></h5>
+																<p class="date"><?= $cmts[$i]->created_at ?> </p>
 																<p class="comment">
-																<?php echo $cmts[$i]->content; ?>
+																<?= $cmts[$i]->content ?>
 																</p>
 															</div>
 														</div>
 														<div class="reply-btn">
-															<a href="" class="btn btn-outline-info">
+															<a href="edit_cmt.php?id=<?= $cmts[$i]->id ?>" class="btn btn-outline-info">
 															<img src="../open-iconic-master/svg/pencil.svg">
 															</a>
-															<a href="" class="btn btn-outline-danger">
+															<!-- <a href="delete_cmt.php?id=" class="btn btn-outline-danger"> -->
 															<img src="../open-iconic-master/svg/trash.svg">
 															</a>
 														</div>
 													</div>
 												</div>
+												<?php } ?>
 											<?php 
-												}
 											}else{
 												echo "No comment";
 											}
@@ -187,22 +237,21 @@
 							</div>
 							<div class="comment-form">
 								<h4>Post Comment</h4>
-								<form action="post.php" method="GET">
+								<form method="POST">
 									<div class="form-group form-inline">
-										<div class="form-group col-lg-6 col-md-12 name">
-											<input type="text" class="form-control" name="name" id="name" placeholder="Enter Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Name'" required>
+										<div class="form-group col-lg-6 col-md-12 email">
+											<input type="hidden" class="form-control" name="post_id" 
+											value="<?= $id ?>">
 										</div>
-										<!-- <div class="form-group col-lg-6 col-md-12 email">
-											<input type="email" class="form-control" id="email" placeholder="Enter email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'">
-										</div> -->
+										<div class="form-group col-lg-6 col-md-12 name">
+											<input type="text" class="form-control" name="user_name"placeholder="Enter Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Name'" required>
+										</div>
+										
 									</div>
-									<!-- <div class="form-group">
-										<input type="text" class="form-control" id="subject" placeholder="Subject" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Subject'">
-									</div> -->
 									<div class="form-group">
-										<textarea class="form-control mb-10" rows="5" name="message" id="message" placeholder="Messege" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Messege'" required=""></textarea>
+										<textarea class="form-control mb-10" rows="5" name="content" placeholder="Messege" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Messege'" required=""></textarea>
 									</div>
-									<input type="submit" class="primary-btn text-uppercase name="add_cmt" value="post comment" > 
+									<input type="submit" class="primary-btn text-uppercase" name="add_cmt" value="post comment" > 
 									<!-- <a href="#" class="primary-btn text-uppercase">Post Comment</a> -->
 								</form>
 							</div>
@@ -219,10 +268,10 @@
 	<!-- start footer Area -->
 	<?php include('footer.php'); ?>
 	<!-- End footer Area -->
-	<script src="../js/vendor/jquery-2.2.4.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<!-- <script src="../js/vendor/jquery-2.2.4.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
 	<script src="../js/vendor/bootstrap.min.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
+	<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script> -->
 	<script src="../js/easing.min.js"></script>
 	<script src="../js/hoverIntent.js"></script>
 	<script src="../js/superfish.min.js"></script>
@@ -235,16 +284,5 @@
 	<script src="../js/mail-script.js"></script>
 	<script src="../js/main.js"></script>
 </body>
-<?php
-if($_GET['name'] !== NULL && $_GET['message'] !== NULL){
-	$name = $_GET['name'];
-	$avata = "../img/blog/c2.jpg";
-	$mess = $_GET['message'];
-	$created_at = "2019-11-11";
-	$updated_at = "2019-11-11";
-	$data = array(6,$name,$avata,$mess,$created_at,$updated_at);
-	var_dump($data);
-	$index = CallAPI('POST','http://localhost:8000/comments',$data);
-}
-?>
+
 </html>
