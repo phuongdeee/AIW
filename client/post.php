@@ -10,6 +10,7 @@ $cmts = json_decode($cmts);
 
 $posts = file_get_contents("http://localhost:8000/posts");
 $posts = json_decode($posts);
+
 if(isset($_GET['id'])) {
 	$id = $_GET['id'];
 	for( $i = 0; $i < count($posts); $i++){
@@ -24,17 +25,19 @@ if(isset($_GET['id'])) {
 		
 	}
 	$count = 0;
+	$count = 0;
 	for($i = 0; $i < count($cmts); $i++){
 		if($cmts[$i]->post_id == $id){
 			
 			$count++;
-			$username = $cmts[$i]->user_name;
-			$mess = $cmts[$i]->content;
-			$date = $cmts[$i]->created_at;
-			$cmt_content = $cmts[$i]->content;
-			$cmt_id = $cmts[$i]->id;
 		}
 	}
+	// 		$username = $cmts[$i]->user_name;
+	// 		$mess = $cmts[$i]->content;
+	// 		$date = $cmts[$i]->created_at;
+	// 		$cmt_id = $cmts[$i]->id;
+	// 	}
+	// }
 	
 }
 if(isset($_POST['add_cmt'])){
@@ -45,13 +48,6 @@ if(isset($_POST['add_cmt'])){
 		
 	}
 }
-// if(isset($_POST['post_id'],$_POST['user_name'],$_POST['content'] )){
-// 	$post_id = $_POST['post_id'];
-// 	$input = $_POST;
-
-// 	CallAPI('POST','http://localhost:8000/comments'.$post_id,$input);
-// 	header('Location: '.$_SERVER['REQUEST_URI']);
-// }
 
 ?>
 <!DOCTYPE html>
@@ -142,7 +138,9 @@ if(isset($_POST['add_cmt'])){
 										<li><a href="#"><span class="lnr lnr-user"></span><?php echo $author; ?></a></li>
 										<li><a href="#"><span class="lnr lnr-calendar-full"></span>
 										<?php echo $date; ?></a></li>
-										<li><a href="#"><span class="lnr lnr-bubble"> </span><?php echo $count; ?> </a></li>
+										<li><a href="#"><span class="lnr lnr-bubble"> </span>
+										<?php echo $count; ?> 
+										</a></li>
 									</ul>
 									<p>
 									<?php echo $content; ?>
@@ -156,10 +154,14 @@ if(isset($_POST['add_cmt'])){
 								<div class="comment-sec-area">
 									<div class="container">
 										<div class="row flex-column">
-											<h6><?= $count;?> Comments</h6>
-											<?php if($count > 0){ ?>
+											<h6><?= $count ?> Comments</h6>
+											
 											<!-- Single cmt starts -->
-												<?php for($i = 0; $i < $count ; $i++){ ?>
+											<?php 
+											
+											for($i = 0; $i < count($cmts); $i++){
+												if($cmts[$i]->post_id == $id){
+											?>
 												<div class="comment-list">
 													<div class="single-comment justify-content-between d-flex">
 														<div class="user justify-content-between d-flex">
@@ -167,29 +169,26 @@ if(isset($_POST['add_cmt'])){
 																<img src="" alt="">
 															</div> -->
 															<div class="desc">
-																<h5><a href="#"><?= $cmts[$i]->user_name ?></a></h5>
-																<p class="date"><?= $cmts[$i]->created_at ?> </p>
+																<h5><a href="#">
+																<?php echo $cmts[$i]->user_name; ?></a></h5>
+																<p class="date">
+																<?php echo $cmts[$i]->created_at; ?> </p>
 																<p class="comment">
-																<?= $cmts[$i]->content ?>
+																<?php echo $cmts[$i]->content; ?>
 																</p>
 															</div>
 														</div>
 														<div class="reply-btn">
-															<a href="edit_cmt.php?id=<?= $cmts[$i]->id ?>" class="btn btn-outline-info">
+															<a href="edit_cmt.php?id=<?php echo $cmts[$i]->id; ?>" name="delete" class="btn btn-outline-info">
 															<img src="../open-iconic-master/svg/pencil.svg">
 															</a>
-															<!-- <a href="delete_cmt.php?id=" class="btn btn-outline-danger"> -->
+															<a href="delete_cmt.php?id=<?php echo $cmts[$i]->id; ?>; " class="btn btn-outline-danger">
 															<img src="../open-iconic-master/svg/trash.svg">
 															</a>
 														</div>
 													</div>
 												</div>
-												<?php } ?>
-											<?php 
-											}else{
-												echo "No comment";
-											}
-											?>
+											<?php } }?>
 											<!-- Single cmt ends -->
 											<!-- reply of a cmt starts -->
 											<!-- <div class="comment-list left-padding">
@@ -239,10 +238,12 @@ if(isset($_POST['add_cmt'])){
 								<h4>Post Comment</h4>
 								<form method="POST">
 									<div class="form-group form-inline">
-										<div class="form-group col-lg-6 col-md-12 email">
+										<div class="form-group col-lg-6 col-md-12">
 											<input type="hidden" class="form-control" name="post_id" 
 											value="<?= $id ?>">
 										</div>
+									</div>
+									<div class="form-group form-inline">
 										<div class="form-group col-lg-6 col-md-12 name">
 											<input type="text" class="form-control" name="user_name"placeholder="Enter Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Name'" required>
 										</div>

@@ -25,6 +25,7 @@ $posts = json_decode($posts_list);
 									</div>
 									<?php } ?>
 								</div>
+								<div class="single-sidebar-widget most-popular-widget">
 									<h6 class="title">Related News</h6>
 									<div class="editors-pick-post">
 										<!-- <div class="feature-img-wrap relative">

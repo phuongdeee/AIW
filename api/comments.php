@@ -19,6 +19,7 @@ if($url == '/comments' && $_SERVER['REQUEST_METHOD'] == 'GET') {
 //return single cmt
 if(preg_match("/comments\/([0-9]{1,2}[:.,-]?)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'GET'){
     $commentId = $matches[1];
+    // $post_id = $matches[1];
     $comment = getComment($dbConn, $commentId);
     echo json_encode($comment);
 }
@@ -40,6 +41,7 @@ if(preg_match("/comments\/([0-9]{1,2}[:.,-]?)/", $url, $matches) && $_SERVER['RE
 if(preg_match("/comments\/([0-9]{1,2}[:.,-]?)/", $url, $matches) && $_SERVER['REQUEST_METHOD'] == 'DELETE'){
     $commentId = $matches[1];
     $result = deleteComment($dbConn, $commentId);
+    $comment = getComment($dbConn, $commentId);
     echo json_encode([
         'id'=> $commentId,
         'deleted'=> $result

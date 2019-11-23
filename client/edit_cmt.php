@@ -5,12 +5,13 @@ include('api_function.php');
 <?php
 $cmts = file_get_contents("http://localhost:8000/comments");
 $cmts = json_decode($cmts);
-    $count = count($cmts);
-
+$count = count($cmts);
 $id = $_GET['id'];
+
 if(isset($_GET['id'])){
         $username;
         $mess;
+        $post_id;
         for($i = 0; $i < $count ; $i++){
             if($cmts[$i]->id == $id){
                 $post_id = $cmts[$i]->post_id;
@@ -24,14 +25,15 @@ if(isset($_GET['id'])){
                 $new_postid = $_POST['post_id'];
                 $new_username = $_POST['user_name'];
                 $new_content = $_POST['content'];
+                $new_content_no_space = str_replace(" ","%20",$new_content);
                 $data = $_POST;
-                CallAPI('PATCH','http://localhost:8000/comments/'.$cmts[$i]->id. "?content=". $new_content,$data);
+                CallAPI('PATCH','http://localhost:8000/comments/'.$cmts[$i]->id. "?content=". $new_content_no_space,$data);
                 header('Location:http://localhost/aiw_magazine/client/post.php?id='.$cmts[$i]->post_id);
             }
         }
     }
-   
 }
+    
 ?>
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
@@ -65,7 +67,7 @@ if(isset($_GET['id'])){
 		<link rel="stylesheet" href="../css/main.css">
 	</head>
     <body>
-    <div class="comment-form">
+    <div class="comment-form" style="border: solid #dae6dd 1px; margin:25px; background-color:#dae6dd">
     <h4>Post Comment</h4>
     <form method="POST">
         <div class="form-group form-inline">
@@ -73,15 +75,13 @@ if(isset($_GET['id'])){
                 <input type="text" class="form-control" name="user_name" required 
                 value= "<?= $username ?>">
             </div>
-            <div class="form-group col-lg-6 col-md-12 email">
+            <div class="form-group col-lg-6 col-md-12">
                 <input type="hidden" class="form-control" name="post_id" 
                 value="<?= $post_id ?>">
             </div>
         </div>
         <div class="form-group">
-            <textarea class="form-control mb-10" rows="5" name="content" required>
-            <?php echo $mess ?>
-            </textarea>
+            <input class="form-control mb-10" name="content" value="<?= $mess ?>" required>
         </div>
         <input type="submit" class="primary-btn text-uppercase" name="add_cmt" value="post comment" > 
         <!-- <a href="#" class="primary-btn text-uppercase">Post Comment</a> -->
