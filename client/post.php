@@ -179,13 +179,18 @@ if(isset($_POST['add_cmt'])){
 															</div>
 														</div>
 														<div class="reply-btn">
-															<a href="edit_cmt.php?id=<?php echo $cmts[$i]->id; ?>" name="delete" class="btn btn-outline-info">
+
+															<a href="edit_cmt.php?id=<?php echo $cmts[$i]->id; ?>" class="btn btn-outline-info">
 															<img src="../open-iconic-master/svg/pencil.svg">
 															</a>
-															<a href="delete_cmt.php?id=<?php echo $cmts[$i]->id; ?>; " class="btn btn-outline-danger">
+															<a href="delete_cmt.php?id=<?php echo $cmts[$i]->id; ?>&post_id=<?php echo $cmts[$i]->post_id; ?> " class="btn btn-outline-danger">
 															<img src="../open-iconic-master/svg/trash.svg">
 															</a>
+															<div class="form-group col-lg-6 col-md-12">
+															<input type="hidden" class="form-control" name="post_id" value="<?= $id ?>">
+															</div>
 														</div>
+
 													</div>
 												</div>
 											<?php } }?>
